@@ -1,3 +1,4 @@
+import uuid
 from django.contrib.gis.db import models as gis_models
 from django.db import models
 from apps.schools.models import School
@@ -32,6 +33,7 @@ class Trip(models.Model):
 
 class VehicleLocation(gis_models.Model):
     trip = gis_models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='locations')
+    client_uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     point = gis_models.PointField(srid=4326)
     speed_kph = gis_models.FloatField(null=True, blank=True)
     accuracy_meters = gis_models.FloatField(default=0.0)
@@ -49,11 +51,21 @@ class TripStopEvent(models.Model):
         ('APPROACHING_ALERT', 'Bus Approaching Alert'),
         ('ARRIVED', 'Bus Arrived at Stop'),
         ('DEPARTED', 'Bus Departed Stop'),
+        ('SKIPPED', 'Stop Skipped'),
+    ]
+    SKIP_REASON_CHOICES = [
+        ('CHILD_ABSENT', 'Student Absent / Called Ahead'),
+        ('ROAD_BLOCKAGE', 'Road Blockage / Inaccessible'),
+        ('GUARDIAN_DIRECT_PICKUP', 'Picked Up Directly by Parent'),
+        ('SAFETY_CONCERN', 'Safety / Emergency Hazard'),
+        ('OTHER', 'Other / Operational Decision'),
     ]
 
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name='stop_events')
     route_stop = models.ForeignKey(RouteStop, on_delete=models.CASCADE)
     event_type = models.CharField(max_length=25, choices=EVENT_CHOICES)
+    skip_reason = models.CharField(max_length=30, choices=SKIP_REASON_CHOICES, null=True, blank=True)
+    notes = models.TextField(blank=True, default='')
     occurred_at = models.DateTimeField()
 
     class Meta:

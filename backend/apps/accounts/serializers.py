@@ -26,6 +26,7 @@ class PhoneTokenObtainPairSerializer(TokenObtainPairSerializer):
             'id': user.id,
             'name': user.name,
             'phone': user.phone,
-            'is_staff': user.is_staff
+            'is_staff': user.is_staff,
+            'is_driver': hasattr(user, 'driver_profile'),
         }
         return data

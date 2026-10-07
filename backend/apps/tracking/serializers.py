@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Trip, VehicleLocation
 from apps.routes.models import RouteStop
+from rest_framework import serializers
 
 class RouteStopSerializer(serializers.ModelSerializer):
     latitude = serializers.SerializerMethodField()
@@ -28,6 +29,16 @@ class TripSerializer(serializers.ModelSerializer):
 class VehicleLocationIngestSerializer(serializers.Serializer):
     latitude = serializers.FloatField(min_value=-90.0, max_value=90.0)
     longitude = serializers.FloatField(min_value=-180.0, max_value=180.0)
+    speed_kph = serializers.FloatField(required=False, default=0.0)
+    accuracy_meters = serializers.FloatField(required=False, default=0.0)
+    recorded_at = serializers.DateTimeField()
+
+
+
+class BulkLocationItemSerializer(serializers.Serializer):
+    client_uuid = serializers.UUIDField()
+    latitude = serializers.FloatField()
+    longitude = serializers.FloatField()
     speed_kph = serializers.FloatField(required=False, default=0.0)
     accuracy_meters = serializers.FloatField(required=False, default=0.0)
     recorded_at = serializers.DateTimeField()

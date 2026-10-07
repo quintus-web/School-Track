@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bus, LogOut, AlertCircle, RefreshCw } from 'lucide-react';
 import AdminSchoolDashboard from './components/AdminSchoolDashboard';
 import ParentDashboard from './components/ParentDashboard';
+import DriverDashboard from './components/DriverDashboard';
 import 'leaflet/dist/leaflet.css';
 
 interface ActiveTripData {
@@ -31,6 +32,8 @@ interface StudentCard {
 export default function App() {
   const [token, setToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [isStaff, setIsStaff] = useState<boolean>(JSON.parse(localStorage.getItem('is_staff') || 'false'));
+  const [isDriver, setIsDriver] = useState<boolean>(JSON.parse(localStorage.getItem('is_driver') || 'false'));
+  const [driverName, setDriverName] = useState<string>(localStorage.getItem('user_name') || '');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -57,7 +60,11 @@ export default function App() {
       }
       localStorage.setItem('access_token', data.access);
       localStorage.setItem('is_staff', JSON.stringify(data.user?.is_staff || false));
+      localStorage.setItem('is_driver', JSON.stringify(data.user?.is_driver || false));
+      localStorage.setItem('user_name', data.user?.name || '');
       setIsStaff(data.user?.is_staff || false);
+      setIsDriver(data.user?.is_driver || false);
+      setDriverName(data.user?.name || '');
       setToken(data.access);
     } catch {
       setLoginError('Unable to connect. Please check your connection.');
@@ -69,8 +76,11 @@ export default function App() {
   const handleLogout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('is_staff');
+    localStorage.removeItem('is_driver');
+    localStorage.removeItem('user_name');
     setToken(null);
     setIsStaff(false);
+    setIsDriver(false);
     setStudents([]);
     setLastUpdated(null);
   };
@@ -171,6 +181,37 @@ export default function App() {
             </p>
           </div>
         </div>
+      </div>
+    );
+  }
+
+  // ── Driver ────────────────────────────────────────────────────────────────
+  if (isDriver && !isStaff) {
+    return (
+      <div className="min-h-screen bg-slate-100 text-slate-800">
+        <header className="bg-white border-b border-slate-200 px-5 py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
+              <Bus size={16} className="text-white" />
+            </div>
+            <div>
+              <span className="font-bold text-slate-900 text-sm">SchoolTrack</span>
+              <span className="ml-2 text-[10px] font-semibold bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                Driver
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 px-3 py-1.5 rounded-lg hover:bg-slate-100 transition"
+          >
+            <LogOut size={14} />
+            Sign out
+          </button>
+        </header>
+        <main className="max-w-lg mx-auto p-4">
+          <DriverDashboard token={token!} driverName={driverName} />
+        </main>
       </div>
     );
   }
