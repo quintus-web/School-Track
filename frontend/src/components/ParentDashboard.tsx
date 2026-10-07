@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { MapPin, Bell, Navigation, Clock, Bus, CheckCircle2, AlertCircle, Wifi, Shield, ChevronRight } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { MapPin, Bell, Navigation, Clock, Bus, CheckCircle2, Wifi, Shield, ChevronRight } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import L from 'leaflet';
 

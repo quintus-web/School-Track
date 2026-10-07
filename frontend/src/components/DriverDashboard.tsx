@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Bus, Play, Square, Wifi, WifiOff, CloudUpload, Navigation,
   CheckCircle2, SkipForward, ShieldAlert, X, MapPin,
 } from 'lucide-react';
 import { useTripTracker } from '../../hooks/useTripTracker';
+import { startBackgroundTracking, stopBackgroundTracking } from '../services/nativeLocation';
 
 interface Stop {
   id: number;
@@ -82,6 +83,7 @@ export default function DriverDashboard({ token, driverName }: Props) {
         setActiveTrip(updated);
         setTrips((prev) => prev.map((t) => (t.id === trip.id ? updated : t)));
         startTracking();
+        await startBackgroundTracking(trip.id);
       }
     } finally {
       setActionLoading(false);
@@ -98,6 +100,7 @@ export default function DriverDashboard({ token, driverName }: Props) {
       );
       if (res.ok) {
         stopTracking();
+        await stopBackgroundTracking();
         setActiveTrip(null);
         setTrips((prev) => prev.filter((t) => t.id !== activeTrip.id));
       }
