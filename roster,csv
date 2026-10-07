@@ -1,0 +1,5 @@
+student_name,admission_number,guardian_name,guardian_phone,route_name,stop_name,relationship
+Faith Muthoni,ADM-2026-101,David Muthoni,0722123456,Rongai - Galleria Route,TotalEnergies Ongata Rongai,Father
+Kelvin Kiprop,ADM-2026-102,Mercy Kiprop,+254 733 987 654,Rongai - Galleria Route,Maasai Mall Gate,Mother
+Sammy Kariuki,ADM-2026-103,Peter Kariuki,254712000111,Rongai - Galleria Route,Galleria Junction,Father
+Invalid Number Child,ADM-2026-104,Bad Phone,07000,Rongai - Galleria Route,Galleria Junction,Parent
